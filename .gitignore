@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.pyproj
 *$py.class
 
 # C extensions
@@ -99,3 +100,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# log files
+*.log
+
+# csv files
+*.csv

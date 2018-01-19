@@ -1,0 +1,1 @@
+-l logbook.log -i .\PDFs -o out_references.csv -s
