@@ -1,1 +1,1 @@
--l logbook.log -i .\PDFs -o out_headers.csv -f
+python GrobidService.py -l logbook.log -i .\PDFs -o out_headers.csv -f

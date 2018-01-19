@@ -26,7 +26,7 @@
 
 from lxml import etree
 from six import text_type
-
+import time
 
 NS = {'tei': 'http://www.tei-c.org/ns/1.0'}
 

@@ -23,7 +23,7 @@ logger.setLevel(logging.DEBUG)
 
 def processHeaderDocument():
     pdfs = utils.get_path_of_pdfs();
-    with open(settings.OUTPUT_FILE, 'w', encoding='UTF-8') as output_file:
+    with open(settings.OUTPUT_FILE, 'w', encoding='UTF-8', newline='') as output_file:
         wr = csv.writer(output_file, quoting=csv.QUOTE_ALL)
         for i, pdf in enumerate(pdfs):
             try:
@@ -66,7 +66,7 @@ def processHeaderDocument():
 
 def processReferencesDocument():
     pdfs = utils.get_path_of_pdfs();
-    with open(settings.OUTPUT_FILE, 'w', encoding='UTF-8') as output_file:
+    with open(settings.OUTPUT_FILE, 'w', encoding='UTF-8', newline='') as output_file:
         wr = csv.writer(output_file, quoting=csv.QUOTE_ALL)
         for i, pdf in enumerate(pdfs):
             try:

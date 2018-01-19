@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, logging, re, traceback, sys
 import requests
+import time
 #
 import browsercookie
 #
@@ -36,7 +37,7 @@ def get_request(url, att_file = None, using_TOR = False):
             if response.status_code == 200:
                 return response.text
             else:
-                raise Exception("HTTP %d - %s: %s" % (response.status_code, response.reason, response.text))
+                raise Exception("HTTP %d - %s" % (response.status_code, response.reason))
         except ConnectionError as error:
             retry = retry - 1
             settings.print_message("ran into connection error: '%s'" % error, 2)
