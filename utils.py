@@ -7,6 +7,7 @@ import browsercookie
 #
 import settings
 from bs4 import BeautifulSoup
+from torrequest import TorRequest
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -23,7 +24,7 @@ def get_request(url, att_file = None, using_TOR = False):
         try:
             try:
                 if using_TOR:
-                    with settings.TOR as tr:
+                    with TorRequest(tor_app=r".\Tor\tor.exe") as tr:
                         response = tr.post(url=url, files = att_file, cookies = browsercookie.chrome(), timeout=settings.DEFAULT_TIMEOUT)
                 else:
                     response = requests.post(url=url, files = att_file, cookies = browsercookie.chrome(), timeout=settings.DEFAULT_TIMEOUT)

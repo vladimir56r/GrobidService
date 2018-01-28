@@ -116,7 +116,7 @@ OUTPUT_FILE = _command_args.OUTPUT_FILE
 MODE = PROCESS_HEADER_MODE if _command_args.ProcessHeader else PROCESS_REFERENCES_MODE
 if _command_args.USING_TOR: 
     USING_TOR_BROWSER = True
-    TOR = TorRequest(tor_app=r".\Tor\tor.exe")
+#    TOR = TorRequest(tor_app=r".\Tor\tor.exe")
 
 logger.info("Initializing logbook.")
 

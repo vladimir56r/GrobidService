@@ -4,4 +4,4 @@ __MAJOR_VERSION__ = "0"
 # MINOR version when you add functionality in a backwards-compatible manner
 __MINOR_VERSION__ = "1"
 # PATCH version when you make backwards-compatible bug fixes
-__PATCH_VERSION__ = "2"
+__PATCH_VERSION__ = "3"
