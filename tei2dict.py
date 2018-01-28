@@ -27,6 +27,9 @@
 from lxml import etree
 from six import text_type
 import time
+import re
+
+YEAR_RE = "19[0-9]{2}|20[0-9]{2}"
 
 NS = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
@@ -40,7 +43,8 @@ def tei_to_dict(tei):
 
     year = get_year(root)
     if year and len(year) >= 1:
-        result['pubdate'] = str(year[0])
+        tmp = re.findall(YEAR_RE, str(year[0]))
+        if tmp: result['pubdate'] = tmp[0]
 
     doi = get_doi(root)
     if doi and len(doi) >= 1:
@@ -158,7 +162,8 @@ def extract_reference_pubnote(el):
         namespaces=NS
     )
     if year and len(year) == 1:
-        result['year'] = str(year[0])
+        tmp = re.findall(YEAR_RE, str(year[0]))
+        if tmp: result['year'] = tmp[0]
 
     pages = []
 

@@ -6,6 +6,7 @@ import json
 import time
 from datetime import datetime
 import re
+from torrequest import TorRequest
 #
 _main_dir = os.path.dirname(__file__)
 #
@@ -34,7 +35,7 @@ def build_version_string():
     return _header
 
 SCHOLAR_SEARCH = 'https://scholar.google.com/scholar?q={0}'
-GROBID_SERVER = 'http://cloud.science-miner.com/grobid/'
+GROBID_SERVER = 'http://cloud.science-miner.com/grobid/api/'
 GROBID_PROCESSED_HEADER_COMMAND = 'processHeaderDocument' # processFulltextDocument processReferences
 GROBID_PROCESSED_REFERENCES_COMMAND = 'processReferences' # processFulltextDocument processReferences
 DEFAULT_TIMEOUT = 60
@@ -113,7 +114,9 @@ _LOGBOOK_NAME = _command_args.LOG_FILE_NAME
 PDFS_PATH = _command_args.INPUT_DIR
 OUTPUT_FILE = _command_args.OUTPUT_FILE
 MODE = PROCESS_HEADER_MODE if _command_args.ProcessHeader else PROCESS_REFERENCES_MODE
-if _command_args.USING_TOR: USING_TOR_BROWSER = True
+if _command_args.USING_TOR: 
+    USING_TOR_BROWSER = True
+    TOR = TorRequest(tor_app=r".\Tor\tor.exe")
 
 logger.info("Initializing logbook.")
 
