@@ -20,8 +20,8 @@ class TorRequest(object):
         self.ctrl.authenticate(password=password)
         self.session = requests.Session()
         self.session.proxies.update({
-            'http': 'socks5://localhost:%d' % self.proxy_port,
-            'https': 'socks5://localhost:%d' % self.proxy_port,
+            'http': 'socks5://127.0.0.1:%d' % self.proxy_port,
+            'https': 'socks5://127.0.0.1:%d' % self.proxy_port,
         })
 
 

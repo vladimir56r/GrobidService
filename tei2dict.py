@@ -56,11 +56,11 @@ def tei_to_dict(tei):
 
     page_from = get_page_from(root)
     if page_from and len(page_from) == 1:
-        result['start_page'] = page_from[0]
+        result['start_page'] = str(page_from[0]).replace("-", "").strip()
 
     page_to = get_page_to(root)
     if page_to and len(page_to) == 1:
-        result['end_page'] = page_to[0]
+        result['end_page'] = str(page_to[0]).replace("-", "").strip()
 
     abstract = get_abstract(root)
     if abstract and len(abstract) == 1:
@@ -143,6 +143,10 @@ def extract_reference_pubnote(el):
     if journal_title and len(journal_title) == 1:
         result['journal_title'] = journal_title[0].text
 
+    journal_doi = el.xpath('./tei:analytic/tei:idno[@type="doi"]', namespaces=NS)
+    if journal_doi and len(journal_doi) == 1:
+        result['doi'] = journal_doi[0].text.replace("doi:", "")
+
     journal_volume = el.xpath(
         './tei:monogr/tei:imprint/tei:biblScope[@unit="volume"]',
         namespaces=NS
@@ -172,14 +176,14 @@ def extract_reference_pubnote(el):
         namespaces=NS
     )
     if page_from and len(page_from) == 1:
-        result['start_page'] = str(page_from[0])
+        result['start_page'] = str(page_from[0]).replace("-", "").strip()
 
     page_to = el.xpath(
         './tei:monogr/tei:imprint/tei:biblScope[@unit="page"]/@to',
         namespaces=NS
     )
     if page_to and len(page_to) == 1:
-        result['end_page'] = str(page_to[0])
+        result['end_page'] = str(page_to[0]).replace("-", "").strip()
 
     return result
 

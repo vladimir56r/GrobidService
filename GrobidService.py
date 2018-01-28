@@ -84,17 +84,19 @@ def processReferencesDocument():
                 logger.debug("Convert completed: {}".format(json.dumps(dictData)))
                 for i, reference in enumerate(dictData["references"]):
                     try:
-                        if not reference["ref_title"]:
+                        if not reference["ref_title"] and not "journal_title" in reference["journal_pubnote"]:
                             settings.print_message("Ref #{} (total {}) has not title, skip".format(i, len(dictData["references"])))
                             logger.debug("Ref #{} (total {}) has not title, skip".format(i, len(dictData["references"])))
                             continue
                         authors = set(reference["authors"]) if "authors" in reference else []
-                        count_publications_on_scholar = utils.get_count_from_scholar(reference["ref_title"].strip(), settings.USING_TOR_BROWSER)
-                        msg = "Ref #{} (total {}): has title:{:^3}has date:{:^3}authors:{:^4}has start page:{:^3}has end page:{:^3}has publisher:{:^3}publications on scholar:{}".format(
+                        count_publications_on_scholar = utils.get_count_from_scholar(reference["ref_title"].strip() if reference["ref_title"] else 
+                                   reference["journal_pubnote"]["journal_title"].strip() if "journal_title" in reference["journal_pubnote"] else "", settings.USING_TOR_BROWSER)
+                        msg = "Ref #{} (total {}): has title:{:^3}has date:{:^3}Has DOI:{:^3}authors:{:^4}has start page:{:^3}has end page:{:^3}has publisher:{:^3}publications on scholar:{}".format(
                             i,
                             len(dictData["references"]),
-                            reference["ref_title"] != None,
+                            reference["ref_title"] != None or "journal_title" in reference["journal_pubnote"],
                             "year" in reference["journal_pubnote"],
+                            "doi" in reference["journal_pubnote"],
                             len(authors),
                             "start_page" in reference["journal_pubnote"],
                             "end_page" in reference["journal_pubnote"],
@@ -105,8 +107,10 @@ def processReferencesDocument():
                         logger.debug(msg)
                         row = list()
                         row.append(os.path.split(pdf)[1])
-                        row.append(reference["ref_title"] if reference["ref_title"] else "")
+                        row.append(reference["ref_title"] if reference["ref_title"] else 
+                                   reference["journal_pubnote"]["journal_title"] if "journal_title" in reference["journal_pubnote"] else "")
                         row.append(reference["journal_pubnote"]["year"] if "year" in reference["journal_pubnote"] else "")
+                        row.append(reference["journal_pubnote"]["doi"] if "doi" in reference["journal_pubnote"] else "")
                         row.append(reference["journal_pubnote"]["start_page"] if "start_page" in reference["journal_pubnote"] else "")
                         row.append(reference["journal_pubnote"]["end_page"] if "end_page" in reference["journal_pubnote"] else "")
                         row.append(count_publications_on_scholar)

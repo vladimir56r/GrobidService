@@ -84,5 +84,5 @@ def get_about_count_results(soup):
 
 def get_count_from_scholar(title, using_TOR = False):
     """ Search publication on Google.scholar and return count of searched papers """
-    url = settings.SCHOLAR_SEARCH.format("{}".format(title))
+    url = settings.SCHOLAR_SEARCH.format("\"{}\"".format(title))
     return get_about_count_results(get_soup(url, using_TOR = using_TOR))
