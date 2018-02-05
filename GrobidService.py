@@ -53,7 +53,7 @@ def processHeaderDocument():
                 logger.debug(msg)
                 row = list()
                 row.append(os.path.split(pdf)[1])
-                row.append(dictData["title"].strip() if "title" in dictData else "")
+                row.append(dictData["title"] if "title" in dictData else "")
                 row.append(dictData["pubdate"] if "pubdate" in dictData else "")
                 row.append(dictData["DOI"] if "DOI" in dictData else "")
                 row.append(dictData["abstract"].strip() if "abstract" in dictData else "")

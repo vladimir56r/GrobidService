@@ -12,10 +12,20 @@ from torrequest import TorRequest
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+__COOKIES = browsercookie.chrome()
+
+
+def _update_cookies():
+    """ Load cookies from Chrome """
+    global __COOKIES
+    __COOKIES = browsercookie.chrome()
+
+
 def get_path_of_pdfs():
     return sorted(
         [os.path.join(root, filename) for root, dirnames, filenames in os.walk(settings.PDFS_PATH) for filename in
             filenames if filename.endswith('.pdf') and os.path.getsize(os.path.join(root, filename)) > 0])
+
 
 def get_request(url, att_file = None, using_TOR = False):
     """Send get request & return data"""
@@ -25,9 +35,9 @@ def get_request(url, att_file = None, using_TOR = False):
             try:
                 if using_TOR:
                     with TorRequest(tor_app=r".\Tor\tor.exe") as tr:
-                        response = tr.post(url=url, files = att_file, cookies = browsercookie.chrome(), timeout=settings.DEFAULT_TIMEOUT)
+                        response = tr.post(url=url, files = att_file, cookies = __COOKIES, timeout=settings.DEFAULT_TIMEOUT)
                 else:
-                    response = requests.post(url=url, files = att_file, cookies = browsercookie.chrome(), timeout=settings.DEFAULT_TIMEOUT)
+                    response = requests.post(url=url, files = att_file, cookies = __COOKIES, timeout=settings.DEFAULT_TIMEOUT)
             except requests.exceptions.Timeout:
                 logging.debug("timeout from requests")
                 settings.print_message("timeout from requests", 2)
@@ -48,6 +58,7 @@ def get_request(url, att_file = None, using_TOR = False):
                 time.sleep(settings.DEFAULT_SLEEP)
         else:
             retry = 0
+    _update_cookies()
 
 def get_soup(url, using_TOR = False):
     """Return the BeautifulSoup for a page"""
