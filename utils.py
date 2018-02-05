@@ -12,13 +12,13 @@ from torrequest import TorRequest
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-__COOKIES = browsercookie.chrome()
-
+SESSION = requests.Session()
+SESSION.cookies = browsercookie.chrome()
 
 def _update_cookies():
     """ Load cookies from Chrome """
-    global __COOKIES
-    __COOKIES = browsercookie.chrome()
+    global SESSION
+    SESSION.cookies = browsercookie.chrome()
 
 
 def get_path_of_pdfs():
@@ -26,6 +26,21 @@ def get_path_of_pdfs():
         [os.path.join(root, filename) for root, dirnames, filenames in os.walk(settings.PDFS_PATH) for filename in
             filenames if filename.endswith('.pdf') and os.path.getsize(os.path.join(root, filename)) > 0])
 
+# Region for work with good cookies
+DONT_TOUCH_KEYS_IN_COOKIES = ['SSID', 'SID', 'HSID']
+def del_gs_cookies():
+    """ Function del google scholar cookies """
+    logger.debug("Start delete cookies for google.com and google scholar")
+    if SESSION.cookies._cookies.get('.scholar.google.com'):
+        del SESSION.cookies._cookies['.scholar.google.com']
+        logger.debug("Delete cookies for google scholar")
+    if SESSION.cookies._cookies.get('.google.com'):
+        google_cookies_keys = list(SESSION.cookies._cookies['.google.com']['/'].keys())
+        for key in google_cookies_keys:
+            if key not in DONT_TOUCH_KEYS_IN_COOKIES:
+                del SESSION.cookies._cookies['.google.com']['/'][key]
+        logger.debug("Delete cookies for google.com")
+    return SESSION.cookies
 
 def get_request(url, att_file = None, using_TOR = False):
     """Send get request & return data"""
@@ -35,9 +50,10 @@ def get_request(url, att_file = None, using_TOR = False):
             try:
                 if using_TOR:
                     with TorRequest(tor_app=r".\Tor\tor.exe") as tr:
-                        response = tr.post(url=url, files = att_file, cookies = __COOKIES, timeout=settings.DEFAULT_TIMEOUT)
+                        response = tr.post(url=url, files = att_file, cookies = SESSION.cookies, timeout=settings.DEFAULT_TIMEOUT)
+                        SESSION.cookies = response.cookies
                 else:
-                    response = requests.post(url=url, files = att_file, cookies = __COOKIES, timeout=settings.DEFAULT_TIMEOUT)
+                    response = SESSION.post(url=url, files = att_file, timeout=settings.DEFAULT_TIMEOUT)
             except requests.exceptions.Timeout:
                 logging.debug("timeout from requests")
                 settings.print_message("timeout from requests", 2)
@@ -58,7 +74,8 @@ def get_request(url, att_file = None, using_TOR = False):
                 time.sleep(settings.DEFAULT_SLEEP)
         else:
             retry = 0
-    _update_cookies()
+    del_gs_cookies()
+
 
 def get_soup(url, using_TOR = False):
     """Return the BeautifulSoup for a page"""
@@ -73,6 +90,7 @@ def get_soup(url, using_TOR = False):
         #logger.warn(traceback.format_exc())
         raise
     return None
+
 
 def get_about_count_results(soup):
     """Shows the approximate number of pages as a result"""
@@ -92,6 +110,7 @@ def get_about_count_results(soup):
     else:
         count_papers = len(soup.find_all('h3', class_="gs_rt"))
     return int(count_papers)
+
 
 def get_count_from_scholar(title, using_TOR = False):
     """ Search publication on Google.scholar and return count of searched papers """

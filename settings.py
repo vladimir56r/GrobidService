@@ -34,7 +34,7 @@ def build_version_string():
                                                       datetime.now().strftime("%B %d %Y, %H:%M:%S"))
     return _header
 
-SCHOLAR_SEARCH = 'https://scholar.google.com/scholar?q={0}'
+SCHOLAR_SEARCH = 'https://scholar.google.ru/scholar?q={0}&hl=en'
 GROBID_SERVER = 'http://cloud.science-miner.com/grobid/api/'
 GROBID_PROCESSED_HEADER_COMMAND = 'processHeaderDocument' # processFulltextDocument processReferences
 GROBID_PROCESSED_REFERENCES_COMMAND = 'processReferences' # processFulltextDocument processReferences

@@ -89,8 +89,8 @@ def processReferencesDocument():
                             logger.debug("Ref #{} (total {}) has not title, skip".format(i, len(dictData["references"])))
                             continue
                         authors = set(reference["authors"]) if "authors" in reference else []
-                        count_publications_on_scholar = utils.get_count_from_scholar(reference["ref_title"].strip() if reference["ref_title"] else 
-                                   reference["journal_pubnote"]["journal_title"].strip() if "journal_title" in reference["journal_pubnote"] else "", settings.USING_TOR_BROWSER)
+                        count_publications_on_scholar = 0 #utils.get_count_from_scholar(reference["ref_title"].strip() if reference["ref_title"] else 
+                                   #reference["journal_pubnote"]["journal_title"].strip() if "journal_title" in reference["journal_pubnote"] else "", settings.USING_TOR_BROWSER)
                         msg = "Ref #{} (total {}): has title:{:^3}has date:{:^3}Has DOI:{:^3}authors:{:^4}has start page:{:^3}has end page:{:^3}has publisher:{:^3}publications on scholar:{}".format(
                             i,
                             len(dictData["references"]),
